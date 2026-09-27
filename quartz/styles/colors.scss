@@ -1,0 +1,227 @@
+@use "./variables" as *;
+
+:root[data-theme="dark"],
+.dark-mode {
+  // Dark Grunge Palette
+  --pink: #8b6969; // Muted dusty rose
+  --red: #6b4423; // Dark rust
+  --maroon: #5d2f2e; // Deep dried blood
+  --orange: #7a5230; // Burnt sienna
+  --yellow: #8b6914; // Dirty gold
+  --green: #3d4f2f; // Muted forest
+  --teal: #3d5a5a; // Muted cyan
+  --sky: #4a5a5a; // Slate gray
+  --blue: #3d4a5a; // Dusty navy
+  --lavender: #5a4a6a; // Muted purple
+  --purple: #4a3d4a; // Dark dusty purple
+  --gold: #8b6914; /* Dirty gold */
+
+  // Theme-specific colors (dark grunge)
+  --background: #1a1815; // Very dark brownish
+  --midground-faint: #{$midground-faint-dark};
+  --midground: #{$midground-dark};
+  --midground-strong: #6b5d4a; // Grungy brown
+  --foreground: #a89a8a; // Aged parchment
+  --secondary: #8b7355; // Muted tan
+  --tertiary: #6a5a4a; // Darker brown
+  --highlight: #6b5d4a25; // Subtle brown highlight
+
+  // Always give access to light and dark colors
+  --light: var(--foreground);
+  --dark: var(--background);
+  --dark-gray: var(--midground-faint);
+
+  // Dropcap background colors
+  --dropcap-background-red: color-mix(in srgb, 55% var(--red), var(--midground-fainter));
+  --dropcap-background-orange: color-mix(in srgb, 55% var(--orange), var(--midground-fainter));
+  --dropcap-background-yellow: color-mix(in srgb, 65% var(--yellow), var(--midground-fainter));
+  --dropcap-background-green: color-mix(in srgb, 65% var(--green), var(--midground-fainter));
+  --dropcap-background-blue: color-mix(in srgb, 65% var(--blue), var(--midground-fainter));
+  --dropcap-background-purple: color-mix(in srgb, 65% var(--purple), var(--midground-fainter));
+  --dropcap-background-pink: color-mix(in srgb, 45% var(--pink), var(--midground-fainter));
+
+  & img,
+  & video:not(:has(::backdrop)),
+  // Unsure why this selector is needed
+  & #pond-video {
+    filter: sepia(30%) grayscale(40%) contrast(90%);
+  }
+}
+
+// Old Book Grunge Palette
+:root[data-theme="light"],
+.light-mode {
+  --pink: #a89a8a; // Aged dusty rose
+  --red: #7a5230; // Burnt umber
+  --orange: #8b6239; // Dark sienna
+  --yellow: #9b7a3d; // Aged gold
+  --green: #5a6a4a; // Muted olive
+  --teal: #5a7a6a; // Faded teal
+  --sky: #6a8a7a; // Sage green
+  --blue: #5a6a8a; // Dusty blue
+  --lavender: #6a5a7a; // Muted lavender
+  --purple: #5a4a6a; // Dusty purple
+  --gold: #9b7a3d; // Aged gold
+
+  // Theme-specific colors (old book)
+  --background: #f5f2ea; // Aged paper
+  --midground-faint: #{$midground-faint-light};
+  --midground: #{$midground-light};
+  --midground-strong: #6b5d4a; // Dark brown
+  --foreground: #4a3d30; // Dark brown ink
+  --secondary: #7a6249; // Medium brown
+  --tertiary: #5a4a3a; // Darker brown
+  --highlight: #d4c4b020; // Subtle parchment highlight
+  --light: var(--background);
+  --dark: var(--foreground);
+  --dark-gray: var(--midground-strong);
+  --maroon: color-mix(in srgb, var(--red), var(--dark) 35%);
+
+  // Dropcap background colors
+  --dropcap-background-red: color-mix(in srgb, 55% var(--red), var(--midground-fainter));
+  --dropcap-background-orange: color-mix(in srgb, 55% var(--orange), var(--midground-fainter));
+  --dropcap-background-yellow: color-mix(in srgb, 65% var(--yellow), var(--midground-fainter));
+  --dropcap-background-green: color-mix(in srgb, 65% var(--green), var(--midground-fainter));
+  --dropcap-background-blue: color-mix(in srgb, 65% var(--blue), var(--midground-fainter));
+  --dropcap-background-purple: color-mix(in srgb, 65% var(--purple), var(--midground-fainter));
+  --dropcap-background-pink: color-mix(in srgb, 45% var(--pink), var(--midground-fainter));
+
+  & img:not([src$=".svg"]), // don't make SVGs fuzzy
+  & video:not(:has(::backdrop)),
+  & iframe:not(:has(::backdrop)) {
+    filter: sepia(15%) contrast(95%);
+  }
+
+  & #pond-video {
+    filter: saturate(80%) sepia(10%) contrast(95%);
+  }
+}
+
+:root {
+  --midground-fainter: color-mix(in srgb, var(--background) 70%, var(--midground-faint));
+  --midground-faintest: color-mix(in srgb, var(--background) 90%, var(--midground-faint));
+  --color-link: light-dark(
+    color-mix(in srgb, var(--secondary) 30%, var(--foreground)),
+    var(--secondary)
+  );
+  --color-link-visited: light-dark(
+    color-mix(in srgb, var(--purple) 40%, var(--color-link)),
+    color-mix(in srgb, var(--purple) 25%, var(--color-link))
+  );
+  --color-link-hover: light-dark(
+    color-mix(in srgb, var(--sky) 50%, var(--color-link)),
+    color-mix(in srgb, var(--sky) 35%, var(--color-link))
+  );
+
+  @each $color in ("red", "pink", "green", "teal", "blue", "purple", "orange", "yellow") {
+    --background-#{$color}: color-mix(in srgb, var(--#{$color}) 30%, var(--background));
+    --border-#{$color}: color-mix(in srgb, var(--#{$color}) 50%, var(--background));
+  }
+}
+
+body,
+section {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.text-highlight {
+  background-color: var(--highlight);
+}
+
+::selection {
+  background-color: var(--midground-strong);
+}
+
+// Simulating dark/light mode
+.dark-mode,
+.light-mode {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+}
+
+.light-mode img {
+  filter: none !important;
+}
+
+.dark-mode img {
+  mix-blend-mode: normal;
+  filter: sepia(30%) grayscale(40%) contrast(90%) !important;
+}
+
+// Mermaid
+@each $color in ("red", "green", "blue", "yellow", "purple", "orange") {
+  rect {
+    color: var(--foreground) !important;
+    fill: var(--background) !important;
+    stroke: var(--midground-faint) !important;
+  }
+  .#{$color} > rect {
+    fill: var(--background-#{$color}) !important;
+    stroke: var(--border-#{$color}) !important;
+  }
+}
+
+p,
+ul,
+text,
+a,
+tr,
+td,
+li,
+ol,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+thead,
+.math {
+  color: var(--foreground);
+  fill: var(--foreground);
+}
+
+.katex {
+  color: inherit;
+  fill: var(--foreground);
+}
+
+hr {
+  background-color: var(--midground-faint);
+}
+
+pre {
+  background-color: var(--midground-faintest);
+
+  & [data-highlighted-chars] {
+    background-color: var(--highlight);
+  }
+
+  & [data-highlighted-line] {
+    background-color: var(--highlight);
+  }
+
+  & [data-rehype-pretty-code-title] {
+    color: var(--foreground);
+  }
+
+  &::before {
+    color: var(--midground-faint);
+  }
+}
+
+a {
+  color: var(--color-link);
+
+  &:visited,
+  &:visited * {
+    color: var(--color-link-visited);
+  }
+}
+
+a:hover,
+a:hover *,
+#toc-title button:hover {
+  color: var(--color-link-hover) !important; // otherwise eg #content-meta a would override
+}

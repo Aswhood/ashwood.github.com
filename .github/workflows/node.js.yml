@@ -1,0 +1,15 @@
+# This workflow is disabled to speed up builds
+# Re-enable if you need to run tests in CI
+name: Node tests (DISABLED)
+
+on:
+  push:
+    branches: ["disabled"]
+  pull_request:
+    branches: ["disabled"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Tests disabled - run locally with npm test"

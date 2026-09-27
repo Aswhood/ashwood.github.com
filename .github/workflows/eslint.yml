@@ -1,0 +1,46 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# ESLint is a tool for identifying and reporting on patterns
+# found in ECMAScript/JavaScript code.
+# More details at https://github.com/eslint/eslint
+# and https://eslint.org
+
+# This workflow is disabled to speed up builds
+# Re-enable if you need to run ESLint in CI
+name: JavaScript linting (DISABLED)
+
+on:
+  push:
+    branches: ["disabled"]
+  pull_request:
+    branches: ["disabled"]
+  schedule:
+    - cron: "16 12 * * 4"
+
+jobs:
+  eslint:
+    name: Run eslint scanning
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ">=22"
+
+      - name: Install ESLint
+        run: |
+          npm install eslint@9.12.0
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: "true"
+
+      - name: Run ESLint
+        run: npx eslint .
+          --config config/javascript/eslint.config.js

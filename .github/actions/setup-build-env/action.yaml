@@ -1,0 +1,66 @@
+name: "Setup Build Environment"
+description: "Checks out code, sets up Node and Python, installs dependencies, and caches them."
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.5.1
+        cache: "npm"
+
+    - name: Cache asset dimensions
+      id: asset-dimensions-cache
+      uses: actions/cache@v4
+      with:
+        path: quartz/plugins/transformers/.asset_dimensions.json
+        key: ${{ runner.os }}-asset-dimensions-${{ github.ref }}
+        restore-keys: |
+          ${{ runner.os }}-asset-dimensions-refs/heads/main
+
+    - name: Install Node Dependencies
+      run: npm ci
+      shell: bash
+      env:
+        NODE_OPTIONS: "--max-old-space-size=4096"
+        PUPPETEER_SKIP_DOWNLOAD: "true"
+
+    - name: Install sharp
+      run: npm install --os=linux --cpu=x64 sharp
+      shell: bash
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+        cache: "pip"
+
+    - name: Install Python Dependencies
+      run: pip install -r requirements.txt
+      shell: bash
+
+    - name: Install Build Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libxml2-utils dos2unix
+      shell: bash
+
+    - name: Download and install latest ffmpeg
+      run: |
+        set -e
+        FFMPEG_URL="https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz"
+        FFMPEG_DIR="/opt/ffmpeg"
+
+        # Create the target directory
+        sudo mkdir -p "$FFMPEG_DIR"
+
+        # Download and extract ffmpeg, stripping the top-level directory
+        curl -sL "$FFMPEG_URL" | sudo tar -xJ -C "$FFMPEG_DIR" --strip-components=1
+
+        # Create symlinks to make ffmpeg and ffprobe available on the PATH
+        sudo ln -sf "$FFMPEG_DIR"/bin/ffmpeg /usr/local/bin/ffmpeg
+        sudo ln -sf "$FFMPEG_DIR"/bin/ffprobe /usr/local/bin/ffprobe
+
+        # Verify the installation
+        ffmpeg -version
+      shell: bash
