@@ -1,3 +1,0 @@
-A list of features I would like to add:
-- Newsletter/Life Update: Something that is a quick post not an article in the blog that appears towards the top of the index page to give a quick Update
-- Different Types of Blogs, I want to be able to either tag .md files, or put them in a seperate folder, to determine if they are Blogs, Life Updates, or History Posts, and have them not show up on the same categories.
